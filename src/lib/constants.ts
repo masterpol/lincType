@@ -2,18 +2,19 @@ export const HIGHLIGHT_STATUS = {
   CORRECT: "correct",
   INCORRECT: "incorrect",
   NONE: "none",
-} as const;
+} as const
 
 export const POSITION_STATUS = {
   START: "start",
   END: "end",
   MIDDLE: "middle",
-} as const;
+} as const
 
 export const ANIMATION_STATUS = {
   LAST_TYPED: "lastTyped",
   NONE: "none",
-} as const;
+  NEXT_CHAR: "nextChar",
+} as const
 
 export const STYLE_CLASSES = {
   CORRECT: "bg-green-200",
@@ -24,10 +25,10 @@ export const STYLE_CLASSES = {
   BASE: "px-0.5 transition-all duration-200",
   CONTAINER: "p-4",
   TEXT: "text-lg mb-2 font-mono",
-} as const;
+} as const
 
 export const SESSION_STATUS = {
   NOT_STARTED: "notStarted",
   STARTED: "started",
   FINISHED: "finished",
-} as const;
+} as const

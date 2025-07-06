@@ -1,7 +1,7 @@
 import { Button } from "@/components/atoms/button";
 
 interface StartBlockProps {
-  onStart: () => void;
+  onStart: () => void
 }
 
 export function StartBlock({ onStart }: StartBlockProps) {
