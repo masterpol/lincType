@@ -1,0 +1,9 @@
+@keyframes character-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.animate-character-pop {
+  animation: character-pop 0.2s ease-in-out;
+}

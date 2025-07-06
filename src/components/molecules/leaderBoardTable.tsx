@@ -1,11 +1,19 @@
 import type { leaderBoardItem } from "@/actions/leaderboard"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/atoms/table"
+import { Title } from "../atoms/title"
+import { memo } from "react"
 
 interface LeaderboardTableProps {
   data: leaderBoardItem[]
 }
 
-export function LeaderboardTable({ data }: LeaderboardTableProps) {
+function LeaderboardTableBase({ data }: LeaderboardTableProps) {
+  if (data.length === 0) {
+    return (
+      <Title variant="sub">No items found yet. Keep practicing your typing skills!</Title>
+    )
+  }
+
   return (
     <Table>
       <TableHeader>
@@ -27,3 +35,5 @@ export function LeaderboardTable({ data }: LeaderboardTableProps) {
     </Table>
   )
 }
+
+export const LeaderboardTable = memo(LeaderboardTableBase)

@@ -1,12 +1,12 @@
 import { useRouter, createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { Button } from '@/components/atoms/button'
 import { Container } from '@/components/atoms/container'
 import { Title } from '@/components/atoms/title'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/tabs'
 import { getListLeaderBoard } from '@/actions/leaderboard'
 import { LeaderboardTable } from '@/components/molecules/leaderBoardTable'
+import { StartBlock } from '@/components/molecules/startBlock'
 
 const dataLoader = createServerFn({ method: 'GET' }).handler(async () => {
   const leaderBoard = await getListLeaderBoard()
@@ -37,15 +37,7 @@ function Home() {
             <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
           </TabsList>
           <TabsContent value="session" className="flex flex-col items-center">
-            <div className="text-left mb-6 max-w-2xl mx-auto">
-              <h2 className="text-xl font-semibold mb-4">How It Works:</h2>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Start typing when you're ready - timing begins with your first keystroke</li>
-                <li>Characters will be color-coded: green for correct (<span className="text-green-500">✓</span>), red for incorrect (<span className="text-red-500">✗</span>)</li>
-                <li>You can restart anytime if you're unhappy with your attempt</li>
-              </ul>
-            </div>
-            <Button onClick={() => null}>Start Session</Button>
+            <StartBlock onStart={() => null} />
           </TabsContent>
           <TabsContent value="leaderboard" className="text-center">
             <LeaderboardTable data={leaderBoard} />
