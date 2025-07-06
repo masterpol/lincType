@@ -1,4 +1,4 @@
-import { useRouter, createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { Container } from '@/components/atoms/container'
 import { Title } from '@/components/atoms/title'
@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/tab
 import { getListLeaderBoard } from '@/actions/leaderboard'
 import { LeaderboardTable } from '@/components/molecules/leaderBoardTable'
 import { StartBlock } from '@/components/molecules/startBlock'
+import { generateSessionId } from '@/lib/utils'
 
 const dataLoader = createServerFn({ method: 'GET' }).handler(async () => {
   const leaderBoard = await getListLeaderBoard()
@@ -22,8 +23,15 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { leaderBoard } = Route.useLoaderData()
+
+  const redirectToSession = () => {
+    navigate({
+      to: '/session/$slug',
+      params: { slug: generateSessionId() }
+    }) 
+  }
 
   return (
     <Container width="narrow">
@@ -37,7 +45,7 @@ function Home() {
             <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
           </TabsList>
           <TabsContent value="session" className="flex flex-col items-center">
-            <StartBlock onStart={() => null} />
+            <StartBlock onStart={() => redirectToSession()} />
           </TabsContent>
           <TabsContent value="leaderboard" className="text-center">
             <LeaderboardTable data={leaderBoard} />

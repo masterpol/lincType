@@ -25,3 +25,9 @@ export const STYLE_CLASSES = {
   CONTAINER: "p-4",
   TEXT: "text-lg mb-2 font-mono",
 } as const;
+
+export const SESSION_STATUS = {
+  NOT_STARTED: "notStarted",
+  STARTED: "started",
+  FINISHED: "finished",
+} as const;

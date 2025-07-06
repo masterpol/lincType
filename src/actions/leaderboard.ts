@@ -18,9 +18,9 @@ const temporalData: leaderBoardItem[] = [
   {
     name: 'Poldo2',
     score: 100,
-    sessionId: '1234567890',
+    sessionId: '1234567891',
     paragraphName: 'paragraph2',
-    paragraphId: '1234567890'
+    paragraphId: '1234567891'
   }, 
 ]
 
