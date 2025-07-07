@@ -1,4 +1,7 @@
+import { db } from "@/db"
+
 export type leaderBoardItem = {
+  id?: string
   name: string
   score: number
   sessionId: string
@@ -6,28 +9,24 @@ export type leaderBoardItem = {
   paragraphId: string
 }
 
-// TODO: temporal data first
-const temporalData: leaderBoardItem[] = [
-  {
-    name: 'Poldon1',
-    score: 100,
-    sessionId: '1234567890',
-    paragraphName: 'paragraph1',
-    paragraphId: '1234567890'
-  },
-  {
-    name: 'Poldo2',
-    score: 100,
-    sessionId: '1234567891',
-    paragraphName: 'paragraph2',
-    paragraphId: '1234567891'
-  }, 
-]
-
-export async function getListLeaderBoard(pages = 10): Promise<leaderBoardItem[]> {
-  return temporalData
+export async function getListLeaderBoard(limit = 10): Promise<leaderBoardItem[]> {
+  return db.all(`
+    SELECT name, score, sessionId, paragraphName, paragraphId 
+    FROM leaderboard 
+    ORDER BY score DESC, name ASC
+    LIMIT ?
+  `, [limit]) as Promise<leaderBoardItem[]>;
 }
 
 export async function setLeaderBoardItem(item: leaderBoardItem): Promise<void> {
-  temporalData.push(item);
+  await db.run(`
+    INSERT INTO leaderboard (name, score, sessionId, paragraphName, paragraphId)
+    VALUES (?, ?, ?, ?, ?)
+  `, [
+    item.name,
+    item.score,
+    item.sessionId,
+    item.paragraphName,
+    item.paragraphId
+  ]);
 }

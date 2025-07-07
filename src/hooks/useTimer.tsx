@@ -1,11 +1,11 @@
-import { useTimer } from 'react-timer-hook'
+import { useTimer } from 'react-timer-hook';
 
 export const returnTwoMinutes = () => {
-  const time = new Date()
-  time.setMinutes(time.getMinutes() + 2)
+  const time = new Date();
+  time.setMinutes(time.getMinutes() + 2);
 
-  return time
-}
+  return time;
+};
 
 export function useTyperTimer() {
   const {
@@ -17,7 +17,7 @@ export function useTyperTimer() {
     pause,
     resume,
     restart: defaultRestart,
-  } = useTimer({ expiryTimestamp: returnTwoMinutes(), onExpire: () => console.warn('onExpire called'), autoStart: false })
+  } = useTimer({ expiryTimestamp: returnTwoMinutes(), onExpire: () => console.warn('onExpire called'), autoStart: false });
 
   const restart = () => {
     defaultRestart(returnTwoMinutes(), false)

@@ -27,10 +27,8 @@ function Home() {
   const { leaderBoard } = Route.useLoaderData()
 
   const redirectToSession = () => {
-    navigate({
-      to: '/session/$slug',
-      params: { slug: generateSessionId() }
-    }) 
+    // FIXME:S have some probles with ssr change to this instead for now
+    window.location.href = `/session/${generateSessionId()}` 
   }
 
   return (

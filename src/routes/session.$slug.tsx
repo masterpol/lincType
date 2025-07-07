@@ -3,6 +3,11 @@ import { Container } from '@/components/atoms/container'
 import TypingBlock from '@/components/organisms/typingBlock'
 import { SessionProvider } from '@/store/sessionStore'
 import { createFileRoute } from '@tanstack/react-router'
+import { createServerFn } from '@tanstack/react-start'
+
+const paragraphs = createServerFn({ method: 'GET', response: 'data' }).handler(async () => {
+  return await getRamdomParagraphs()
+})
 
 export const Route = createFileRoute('/session/$slug')({
   loader: async ({ params }) => {
@@ -10,7 +15,7 @@ export const Route = createFileRoute('/session/$slug')({
       throw new Error('Session ID is required')
     }
 
-    const paragraph = await getRamdomParagraphs();
+    const paragraph = await paragraphs()
 
     return {
       sessionId: params.slug,

@@ -59,7 +59,10 @@ function TypingBlock() {
                 onBlur={field.handleBlur}
                 className="mb-10" placeholder="start typing to start the session"
                 onChange={(e) => {
-                  if(!timer.isRunning) timer.start()
+                  if(!timer.isRunning) {
+                    form.setFieldValue('formStatus', SESSION_STATUS.STARTED)
+                    timer.start()
+                  }
 
                   if (e.target.value.length < field.state.value.length) {
                     handleDelete(field.state.value.length - e.target.value.length)
