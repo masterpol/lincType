@@ -93,6 +93,7 @@ function TypingBlock() {
                   }
                 }}
                 maxLength={paragraph.content.length}
+                role="textbox"
               />
             )
           }
