@@ -8,9 +8,15 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createServerRootRoute } from '@tanstack/react-start/server'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SessionSlugRouteImport } from './routes/session.$slug'
+import { Route as ResultSlugRouteImport } from './routes/result.$slug'
+import { ServerRoute as ResultServerRouteImport } from './routes/result'
+
+const rootServerRouteImport = createServerRootRoute()
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +28,66 @@ const SessionSlugRoute = SessionSlugRouteImport.update({
   path: '/session/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResultSlugRoute = ResultSlugRouteImport.update({
+  id: '/result/$slug',
+  path: '/result/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultServerRoute = ResultServerRouteImport.update({
+  id: '/result',
+  path: '/result',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/result/$slug': typeof ResultSlugRoute
   '/session/$slug': typeof SessionSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/result/$slug': typeof ResultSlugRoute
   '/session/$slug': typeof SessionSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/result/$slug': typeof ResultSlugRoute
   '/session/$slug': typeof SessionSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/session/$slug'
+  fullPaths: '/' | '/result/$slug' | '/session/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/session/$slug'
-  id: '__root__' | '/' | '/session/$slug'
+  to: '/' | '/result/$slug' | '/session/$slug'
+  id: '__root__' | '/' | '/result/$slug' | '/session/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ResultSlugRoute: typeof ResultSlugRoute
   SessionSlugRoute: typeof SessionSlugRoute
+}
+export interface FileServerRoutesByFullPath {
+  '/result': typeof ResultServerRoute
+}
+export interface FileServerRoutesByTo {
+  '/result': typeof ResultServerRoute
+}
+export interface FileServerRoutesById {
+  __root__: typeof rootServerRouteImport
+  '/result': typeof ResultServerRoute
+}
+export interface FileServerRouteTypes {
+  fileServerRoutesByFullPath: FileServerRoutesByFullPath
+  fullPaths: '/result'
+  fileServerRoutesByTo: FileServerRoutesByTo
+  to: '/result'
+  id: '__root__' | '/result'
+  fileServerRoutesById: FileServerRoutesById
+}
+export interface RootServerRouteChildren {
+  ResultServerRoute: typeof ResultServerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,13 +106,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SessionSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/result/$slug': {
+      id: '/result/$slug'
+      path: '/result/$slug'
+      fullPath: '/result/$slug'
+      preLoaderRoute: typeof ResultSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
+}
+declare module '@tanstack/react-start/server' {
+  interface ServerFileRoutesByPath {
+    '/result': {
+      id: '/result'
+      path: '/result'
+      fullPath: '/result'
+      preLoaderRoute: typeof ResultServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ResultSlugRoute: ResultSlugRoute,
   SessionSlugRoute: SessionSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+const rootServerRouteChildren: RootServerRouteChildren = {
+  ResultServerRoute: ResultServerRoute,
+}
+export const serverRouteTree = rootServerRouteImport
+  ._addFileChildren(rootServerRouteChildren)
+  ._addFileTypes<FileServerRouteTypes>()

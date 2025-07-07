@@ -27,7 +27,7 @@ function Home() {
   const { leaderBoard } = Route.useLoaderData()
 
   const redirectToSession = () => {
-    // FIXME:S have some probles with ssr change to this instead for now
+    // FIXME: have some probles with ssr change to this instead for now
     window.location.href = `/session/${generateSessionId()}` 
   }
 

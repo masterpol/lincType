@@ -4,10 +4,21 @@ import TypingBlock from '@/components/organisms/typingBlock'
 import { SessionProvider } from '@/store/sessionStore'
 import { createFileRoute } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import { redirect } from '@tanstack/react-router'
+import { getLeaderBoardBySessionId } from '@/actions/leaderboard'
+import z from 'zod'
 
-const paragraphs = createServerFn({ method: 'GET', response: 'data' }).handler(async () => {
+const getParagraphs = createServerFn({ method: 'GET', response: 'data' }).handler(async () => {
   return await getRamdomParagraphs()
 })
+
+const getLeaderboardBySessionId = createServerFn({ method: 'GET', response: 'data' })
+  .validator((data: unknown) => 
+    z.string().parse(data)
+  )
+  .handler(async ({ data }) => {
+    return await getLeaderBoardBySessionId(data)
+  })
 
 export const Route = createFileRoute('/session/$slug')({
   loader: async ({ params }) => {
@@ -15,7 +26,15 @@ export const Route = createFileRoute('/session/$slug')({
       throw new Error('Session ID is required')
     }
 
-    const paragraph = await paragraphs()
+    const leaderBoard = await getLeaderboardBySessionId({ data: params.slug })
+
+    if(leaderBoard) {
+      throw redirect({
+        to: '/',
+      })
+    }
+
+    const paragraph = await getParagraphs()
 
     return {
       sessionId: params.slug,

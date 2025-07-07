@@ -1,23 +1,32 @@
-import type { FormEvent } from "react"
+import { useEffect, type FormEvent } from "react"
 import { useNavigate } from "@tanstack/react-router"
 import { useStore } from "@tanstack/react-form"
 import { useSession } from "@/hooks/useSession"
 import { useSessionForm } from "@/hooks/useSessionForm"
+import { useTyperTimer } from "@/hooks/useTimer"
 import { SESSION_STATUS } from "@/lib/constants"
 import HighlightParagraph from "@/components/molecules/highlightParagraph"
 import { Textarea } from "@/components/atoms/textarea"
 import { Button } from "@/components/atoms/button"
 import { Title } from "@/components/atoms/title"
-import { useTyperTimer } from "@/hooks/useTimer"
+import { Input } from "@/components/atoms/input"
 
 function TypingBlock() {
   const navigate = useNavigate()
   const { paragraph, sessionId } = useSession()
-  const form = useSessionForm(sessionId, paragraph.id)
+  const form = useSessionForm(sessionId, paragraph)
   const timer = useTyperTimer()
 
   const formStatus = useStore(form.store, ({ values }) => values.formStatus)
   const isTouched = useStore(form.store, ({ isTouched }) => isTouched)
+
+  useEffect(() => {
+    if (timer.minutes === 0 && timer.seconds === 0 && formStatus === SESSION_STATUS.STARTED) {
+      timer.pause()
+      form.setFieldValue('formStatus', SESSION_STATUS.FINISHED)
+      form.setFieldValue('totalSeconds', timer.totalSeconds)
+    }
+  }, [timer.minutes, timer.seconds, formStatus]);
 
   const handleDelete = (valueToAdd: number) => {
     form.setFieldValue('deletes', form.getFieldValue('deletes') + valueToAdd)
@@ -34,12 +43,17 @@ function TypingBlock() {
     timer.pause()
     form.setFieldValue('formStatus', SESSION_STATUS.FINISHED)
     form.setFieldValue('totalSeconds', timer.totalSeconds)
+
+    if(!form.getFieldValue('userName')) {
+      return;
+    }
+
     form.handleSubmit()
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <Title className="text-2xl font-bold text-center mb-8">Current Session Time</Title>
+      <Title className="text-2xl font-bold text-center mb-8">Current Session: {paragraph.name}</Title>
       <div className="flex justify-center items-center mb-8 font-mono">
         <div className="bg-slate-100 dark:bg-slate-800 rounded-lg px-6 py-3 text-3xl font-semibold tabular-nums">
           {String(timer.minutes).padStart(2, '0')}:{String(timer.seconds).padStart(2, '0')}
@@ -84,6 +98,23 @@ function TypingBlock() {
           }
         </>
       )} />
+      {formStatus === SESSION_STATUS.FINISHED && (
+        <div className="mb-6 flex flex-col items-center justify-center text-center">
+          <Title variant="sub">Congratulation you finish, save yor score</Title>
+          <form.Field name="userName" children={(field) => (
+            <Input
+              name={field.name}
+              value={field.state.value}
+              onChange={(e) => field.handleChange(e.target.value)}
+              placeholder="Enter your name"
+              className="mb-4"
+              autoFocus
+              min={3}
+              max={10}
+            />
+          )} />
+        </div>
+      )}
       <div className="flex justify-center gap-4">
         <Button
           type="button"
@@ -93,7 +124,9 @@ function TypingBlock() {
           Cancel
         </Button>
         <Button type="button" onClick={resetForm}>Re-Start</Button>
-        <Button type="submit" disabled={!isTouched || formStatus === SESSION_STATUS.FINISHED}>Save</Button>
+        <Button type="submit" disabled={!isTouched}>
+          {formStatus === SESSION_STATUS.FINISHED ? 'Save' : 'finish'}
+        </Button>
       </div>
     </form>
   )
