@@ -26,9 +26,10 @@ function Home() {
   const navigate = useNavigate()
   const { leaderBoard } = Route.useLoaderData()
 
-  const redirectToSession = () => {
-    // FIXME: have some probles with ssr change to this instead for now
-    window.location.href = `/session/${generateSessionId()}` 
+  const redirectToSession = () => { 
+    return navigate({
+      to: `/session/${generateSessionId()}`,
+    })
   }
 
   return (

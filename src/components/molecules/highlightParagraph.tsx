@@ -70,7 +70,8 @@ function HighlightParagraph({ paragraph, userInput }: HighlightParagraphProps) {
       const isNextChar = index === lastUserInputPosition + 1
 
       return (
-        <span 
+        <span
+          data-testid={`${index}-${char.replace(' ', '_')}`}
           key={index} 
           className={cn(
             characterVariants({ 

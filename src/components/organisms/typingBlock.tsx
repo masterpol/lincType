@@ -33,9 +33,9 @@ function TypingBlock() {
   }
 
   const resetForm = () => {
+    timer.restart()
     form.setFieldValue('formStatus', SESSION_STATUS.NOT_STARTED)
     form.reset()
-    timer.restart()
   }
 
   const handleSubmit = (e: FormEvent) => {
@@ -52,7 +52,7 @@ function TypingBlock() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} role="form">
       <Title className="text-2xl font-bold text-center mb-8">Current Session: {paragraph.name}</Title>
       <div className="flex justify-center items-center mb-8 font-mono">
         <div className="bg-slate-100 dark:bg-slate-800 rounded-lg px-6 py-3 text-3xl font-semibold tabular-nums">
@@ -124,7 +124,7 @@ function TypingBlock() {
         >
           Cancel
         </Button>
-        <Button type="button" onClick={resetForm}>Re-Start</Button>
+        <Button type="button" disabled={!isTouched} onClick={resetForm}>Re-Start</Button>
         <Button type="submit" disabled={!isTouched}>
           {formStatus === SESSION_STATUS.FINISHED ? 'Save' : 'finish'}
         </Button>

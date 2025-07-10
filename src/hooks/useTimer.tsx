@@ -1,27 +1,59 @@
-import { useTimer } from 'react-timer-hook';
+import { useState, useEffect, useCallback } from 'react'
 
-export const returnTwoMinutes = () => {
-  const time = new Date();
-  time.setMinutes(time.getMinutes() + 2);
+const TWO_MINUTES_IN_SECONDS = 120
 
-  return time;
-};
+export const returnTwoMinutes = (serverDate: number) => {
+  const time = new Date(serverDate)
+  time.setMinutes(time.getMinutes() + 2)
+  return time
+}
 
 export function useTyperTimer() {
-  const {
-    totalSeconds,
-    seconds,
-    minutes,
-    isRunning,
-    start,
-    pause,
-    resume,
-    restart: defaultRestart,
-  } = useTimer({ expiryTimestamp: returnTwoMinutes(), onExpire: () => console.warn('onExpire called'), autoStart: false });
+  const [isRunning, setIsRunning] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(TWO_MINUTES_IN_SECONDS)
 
-  const restart = () => {
-    defaultRestart(returnTwoMinutes(), false)
-  }
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout
+
+    if (isRunning && timeLeft > 0) {
+      intervalId = setInterval(() => {
+        setTimeLeft((prev) => Math.max(0, prev - 1))
+      }, 1000)
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
+  }, [isRunning, timeLeft])
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      setIsRunning(false)
+    }
+  }, [timeLeft])
+
+  const start = useCallback(() => {
+    setTimeLeft(TWO_MINUTES_IN_SECONDS)
+    setIsRunning(true)
+  }, [])
+
+  const pause = useCallback(() => {
+    setIsRunning(false)
+  }, [])
+
+  const resume = useCallback(() => {
+    setIsRunning(true)
+  }, [])
+
+  const restart = useCallback(() => {
+    setTimeLeft(TWO_MINUTES_IN_SECONDS)
+    setIsRunning(false)
+  }, [])
+
+  const minutes = Math.floor(timeLeft / 60)
+  const seconds = timeLeft % 60
 
   return {
     seconds,
@@ -31,6 +63,6 @@ export function useTyperTimer() {
     pause,
     resume,
     restart,
-    totalSeconds
+    totalSeconds: timeLeft
   }
 }
