@@ -1,5 +1,4 @@
 import { getRamdomParagraphs } from '@/actions/paragraphs'
-import { Container } from '@/components/atoms/container'
 import TypingBlock from '@/components/organisms/typingBlock'
 import { SessionProvider } from '@/store/sessionStore'
 import { createFileRoute } from '@tanstack/react-router'
@@ -48,14 +47,14 @@ function Session() {
   const { sessionId, paragraph } = Route.useLoaderData()
 
   if (!sessionId) {
-    return <Container width="narrow">Session not found</Container>
+    return <>Session not found</>
   }
 
   return (
-    <Container width="narrow">
+    <>
       <SessionProvider paragraph={paragraph} sessionId={sessionId}>
         <TypingBlock />
       </SessionProvider>
-    </Container>
+    </>
   )
 }

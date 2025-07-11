@@ -58,7 +58,7 @@ export function useSessionForm(sessionId: string, paragraph: Paragraph) {
       } catch (error) {
         console.error('Error:', error);
         alert('Error saving result')
-        throw redirect({
+        return redirect({
           to: '/',
         })
       }

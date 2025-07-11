@@ -10,6 +10,7 @@ import { Textarea } from "@/components/atoms/textarea"
 import { Button } from "@/components/atoms/button"
 import { Title } from "@/components/atoms/title"
 import { Input } from "@/components/atoms/input"
+import { Timer } from "@/components/atoms/timer"
 
 function TypingBlock() {
   const navigate = useNavigate()
@@ -53,12 +54,11 @@ function TypingBlock() {
 
   return (
     <form onSubmit={handleSubmit} role="form">
-      <Title className="text-2xl font-bold text-center mb-8">Current Session: {paragraph.name}</Title>
-      <div className="flex justify-center items-center mb-8 font-mono">
-        <div className="bg-slate-100 dark:bg-slate-800 rounded-lg px-6 py-3 text-3xl font-semibold tabular-nums">
-          {String(timer.minutes).padStart(2, '0')}:{String(timer.seconds).padStart(2, '0')}
-        </div>
-      </div>
+      <Title variant="sub" className="font-bold text-center mb-8">
+        Current Session:
+        <span className="text-blue-500 ml-3">{paragraph.name}</span>
+      </Title>
+      <Timer minutes={timer.minutes} seconds={timer.seconds} />
       <form.Field name="input" children={(field) => (
         <>
           <HighlightParagraph 

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const containerVariants = cva(
-  "mx-auto w-full px-4 sm:px-6 lg:px-8 sm:border sm:border-border sm:rounded-lg sm:shadow-sm flex flex-col my-auto h-fit",
+  "mx-auto w-full  px-4 sm:px-6 lg:px-8 sm:border sm:border-border sm:rounded-lg sm:shadow-sm flex flex-col mt-[10%] mb-auto h-fit",
   {
     variants: {
       width: {

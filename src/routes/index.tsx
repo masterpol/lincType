@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { Container } from '@/components/atoms/container'
 import { Title } from '@/components/atoms/title'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/atoms/tabs'
@@ -33,7 +32,7 @@ function Home() {
   }
 
   return (
-    <Container width="narrow">
+    <>
       <Title variant="main">
         Test Your Typing Speed, Scrub!
       </Title>
@@ -51,6 +50,6 @@ function Home() {
           </TabsContent>
         </Tabs>
       </div>
-    </Container>
+    </>
   )
 }

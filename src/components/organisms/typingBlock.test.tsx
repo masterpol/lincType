@@ -14,7 +14,7 @@ vi.stubGlobal('fetch', mockFetch)
 
 const navigate = vi.fn()
 const redirect = vi.fn().mockImplementation((args) => {
-  throw { ...args, __isRedirect: true }
+  return args
 })
 
 vi.mock('@tanstack/react-router', () => ({
@@ -47,7 +47,7 @@ describe('TypingBlock', () => {
   it('should show correct paragraph content', () => {
     render(<TypingBlock />, { wrapper: createWrapper() })
     
-    expect(screen.getByText(`Current Session: ${mockParagraph.name}`)).toBeDefined()
+    expect(screen.getByText(`${mockParagraph.name}`)).toBeDefined()
 
      mockParagraph.content.split('').forEach((char, index) => {
       const element = screen.getByTestId(`${index}-${char.replace(' ', '_')}`)
