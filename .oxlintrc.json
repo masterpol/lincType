@@ -3,7 +3,8 @@
   "plugins": [
     "unicorn",
     "typescript",
-    "oxc"
+    "oxc",
+    "vitest"
   ],
   "categories": {},
   "rules": {
