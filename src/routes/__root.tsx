@@ -1,4 +1,5 @@
-import * as React from 'react'
+import { scan } from "react-scan";
+import { useEffect } from 'react'
 import {
   HeadContent,
   Link,
@@ -63,6 +64,12 @@ function NotFound() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    scan({
+      enabled: true,
+    });
+  }, [])
+  
   return (
     <html>
       <head>

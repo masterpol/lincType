@@ -1,49 +1,37 @@
-import { useEffect, type FormEvent } from "react"
+import { type FormEvent } from "react"
 import { useNavigate } from "@tanstack/react-router"
 import { useStore } from "@tanstack/react-form"
 import { useSession } from "@/hooks/useSession"
 import { useSessionForm } from "@/hooks/useSessionForm"
-import { useTyperTimer } from "@/hooks/useTimer"
 import { SESSION_STATUS } from "@/lib/constants"
 import HighlightParagraph from "@/components/molecules/highlightParagraph"
 import { Textarea } from "@/components/atoms/textarea"
 import { Button } from "@/components/atoms/button"
 import { Title } from "@/components/atoms/title"
 import { Input } from "@/components/atoms/input"
-import { Timer } from "@/components/atoms/timer"
+import FullTimer from "./fullTimer"
 
 function TypingBlock() {
   const navigate = useNavigate()
   const { paragraph, sessionId } = useSession()
   const form = useSessionForm(sessionId, paragraph)
-  const timer = useTyperTimer()
 
   const formStatus = useStore(form.store, ({ values }) => values.formStatus)
   const isTouched = useStore(form.store, ({ isTouched }) => isTouched)
 
-  useEffect(() => {
-    if (timer.minutes === 0 && timer.seconds === 0 && formStatus === SESSION_STATUS.STARTED) {
-      timer.pause()
-      form.setFieldValue('formStatus', SESSION_STATUS.FINISHED)
-      form.setFieldValue('totalSeconds', timer.totalSeconds)
-    }
-  }, [timer.minutes, timer.seconds, formStatus]);
 
   const handleDelete = (valueToAdd: number) => {
     form.setFieldValue('deletes', form.getFieldValue('deletes') + valueToAdd)
   }
 
   const resetForm = () => {
-    timer.restart()
     form.setFieldValue('formStatus', SESSION_STATUS.NOT_STARTED)
     form.reset()
   }
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    timer.pause()
     form.setFieldValue('formStatus', SESSION_STATUS.FINISHED)
-    form.setFieldValue('totalSeconds', timer.totalSeconds)
 
     if(!form.getFieldValue('userName')) {
       return;
@@ -58,7 +46,7 @@ function TypingBlock() {
         Current Session:
         <span className="text-blue-500 ml-3">{paragraph.name}</span>
       </Title>
-      <Timer minutes={timer.minutes} seconds={timer.seconds} />
+      <FullTimer form={form} />
       <form.Field name="input" children={(field) => (
         <>
           <HighlightParagraph 
@@ -73,9 +61,8 @@ function TypingBlock() {
                 onBlur={field.handleBlur}
                 className="mb-10" placeholder="start typing to start the session"
                 onChange={(e) => {
-                  if(!timer.isRunning) {
+                  if(field.state.value.length === 0) {
                     form.setFieldValue('formStatus', SESSION_STATUS.STARTED)
-                    timer.start()
                   }
 
                   if (e.target.value.length < field.state.value.length) {
@@ -133,4 +120,4 @@ function TypingBlock() {
   )
 }
 
-export default TypingBlock
+export default  TypingBlock

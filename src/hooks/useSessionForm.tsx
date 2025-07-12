@@ -28,6 +28,7 @@ export function useSessionForm(sessionId: string, paragraph: Paragraph) {
       userName: undefined,
     } as SessionForm,
     onSubmit: async ({ value }) => {
+      console.log('submit', value)
       const score = scorecoreCalculation({ input: value.input, totalSeconds: value.totalSeconds, deletes: value.deletes, originalText: paragraph.content })
 
        try {
