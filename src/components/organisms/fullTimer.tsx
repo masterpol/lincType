@@ -16,7 +16,7 @@ function FullTimer({ form }: { form: ReturnType<typeof useSessionForm> }) {
         form.setFieldValue('formStatus', SESSION_STATUS.FINISHED)
         form.setFieldValue('totalSeconds', totalSeconds)
       }
-    }, [minutes, seconds, formStatus]);
+    }, [minutes, seconds, formStatus])
 
   useEffect(() => {
     switch (formStatus) {

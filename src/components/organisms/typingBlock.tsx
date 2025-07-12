@@ -19,7 +19,6 @@ function TypingBlock() {
   const formStatus = useStore(form.store, ({ values }) => values.formStatus)
   const isTouched = useStore(form.store, ({ isTouched }) => isTouched)
 
-
   const handleDelete = (valueToAdd: number) => {
     form.setFieldValue('deletes', form.getFieldValue('deletes') + valueToAdd)
   }
