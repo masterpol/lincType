@@ -14,7 +14,7 @@ export const ServerRoute = createServerFileRoute('/result').methods({
       if (error instanceof ZodError) {
         return new Response(JSON.stringify({ error: error.message }), { status: 400 })
       }
+      return new Response(JSON.stringify({ error: 'Internal server error', data: error }), { status: 500 })
     }
-    return new Response(JSON.stringify({ message: `Hello, ${body.name}!` }))
   },
 })

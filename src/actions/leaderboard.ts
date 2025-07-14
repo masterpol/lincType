@@ -9,13 +9,14 @@ export const leaderBoardSchema = z.object({
   paragraphId: z.string().min(1),
   accuracy: z.number().gte(0),
   id: z.string().optional(),
+  wpm: z.number().optional(),
 })
 
 export type leaderBoardItem = z.infer<typeof leaderBoardSchema>
 
 export async function getListLeaderBoard(limit = 10): Promise<leaderBoardItem[]> {
   return db.all(`
-    SELECT name, score, sessionId, paragraphName, paragraphId, accuracy
+    SELECT name, score, sessionId, paragraphName, paragraphId, accuracy, wpm
     FROM leaderboard 
     ORDER BY score DESC, name ASC
     LIMIT ?
@@ -24,19 +25,20 @@ export async function getListLeaderBoard(limit = 10): Promise<leaderBoardItem[]>
 
 export async function setLeaderBoardItem(item: leaderBoardItem): Promise<leaderBoardItem> {
   await db.run(`
-    INSERT INTO leaderboard (name, score, sessionId, paragraphName, paragraphId, accuracy)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO leaderboard (name, score, sessionId, paragraphName, paragraphId, accuracy, wpm)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `, [
     item.name,
     item.score,
     item.sessionId,
     item.paragraphName,
     item.paragraphId,
-    item.accuracy
+    item.accuracy,
+    item.wpm
   ]);
 
   const result = await db.get(`
-    SELECT id, name, score, sessionId, paragraphName, paragraphId, accuracy
+    SELECT id, name, score, sessionId, paragraphName, paragraphId, accuracy, wpm
     FROM leaderboard
     WHERE rowid = last_insert_rowid()
   `) as leaderBoardItem;
@@ -46,7 +48,7 @@ export async function setLeaderBoardItem(item: leaderBoardItem): Promise<leaderB
 
 export async function getLeaderBoardBySessionId(sessionId: string): Promise<leaderBoardItem | undefined> {
   const results = await db.all(`
-    SELECT id, name, score, sessionId, paragraphName, paragraphId, accuracy
+    SELECT id, name, score, sessionId, paragraphName, paragraphId, accuracy, wpm
     FROM leaderboard
     WHERE sessionId = ?
     ORDER BY score DESC, name ASC

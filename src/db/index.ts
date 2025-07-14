@@ -25,6 +25,7 @@ async function initDb() {
         paragraphName TEXT NOT NULL,
         paragraphId TEXT NOT NULL,
         accuracy REAL NOT NULL,
+        wpm REAL NOT NULL,
         FOREIGN KEY (paragraphId) REFERENCES paragraphs(id)
       );
     `);

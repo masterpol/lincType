@@ -1,6 +1,6 @@
 import { SESSION_STATUS } from '@/lib/constants'
 import { useForm } from '@tanstack/react-form'
-import { scorecoreCalculation } from '@/lib/scoreCalculation'
+import { scoreCalculation } from '@/lib/scoreCalculation'
 import { Paragraph } from '@/actions/paragraphs'
 import { redirect, useNavigate } from '@tanstack/react-router'
 import type { leaderBoardItem } from '@/actions/leaderboard'
@@ -28,8 +28,17 @@ export function useSessionForm(sessionId: string, paragraph: Paragraph) {
       userName: undefined,
     } as SessionForm,
     onSubmit: async ({ value }) => {
-      console.log('submit', value)
-      const score = scorecoreCalculation({ input: value.input, totalSeconds: value.totalSeconds, deletes: value.deletes, originalText: paragraph.content })
+      const score = scoreCalculation({ input: value.input, totalSeconds: value.totalSeconds, deletes: value.deletes, originalText: paragraph.content })
+
+      const body = {
+        name: value.userName,
+        score: score.score,
+        sessionId: value.sessionId,
+        paragraphName: paragraph.name,
+        paragraphId: value.paragraphId,
+        accuracy: score.accuracy,
+        wpm: score.wpm
+      }
 
        try {
         const response = await fetch('/result', {
@@ -37,14 +46,7 @@ export function useSessionForm(sessionId: string, paragraph: Paragraph) {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            name: value.userName,
-            score: score.score,
-            sessionId: value.sessionId,
-            paragraphName: paragraph.name,
-            paragraphId: value.paragraphId,
-            accuracy: score.accuracy
-          })
+          body: JSON.stringify(body)
         });
 
         if (!response.ok) {

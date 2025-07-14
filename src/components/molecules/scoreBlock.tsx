@@ -19,9 +19,18 @@ function ScoreBlock({ leaderBoard }: ScoreBlockProps) {
             <span className="text-4xl font-bold font-mono">{leaderBoard.paragraphName}</span>
           </div>
 
-          <div className="flex flex-col items-center">
-            <span className="text-gray-600 dark:text-gray-400 text-lg mb-2">Score</span>
-            <span className="text-4xl font-bold font-mono">{leaderBoard.score}</span>
+          <div className="flex items-center gap-8">
+            <div className="flex flex-col items-center">
+              <span className="text-gray-600 dark:text-gray-400 text-lg mb-2">Score</span>
+              <span className="text-4xl font-bold font-mono">{leaderBoard.score}</span>
+            </div>
+            
+            <div className="w-px h-20 bg-slate-300 dark:bg-slate-600"></div>
+            
+            <div className="flex flex-col items-center">
+              <span className="text-gray-600 dark:text-gray-400 text-lg mb-2">WPM</span>
+              <span className="text-4xl font-bold font-mono">{leaderBoard.wpm}</span>
+            </div>
           </div>
           
           <div className="w-full h-px bg-slate-300 dark:bg-slate-600"></div>

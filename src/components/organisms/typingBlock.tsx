@@ -9,7 +9,7 @@ import { Textarea } from "@/components/atoms/textarea"
 import { Button } from "@/components/atoms/button"
 import { Title } from "@/components/atoms/title"
 import { Input } from "@/components/atoms/input"
-import FullTimer from "./fullTimer"
+import { FullTimer } from "@/components/organisms/fullTimer"
 
 function TypingBlock() {
   const navigate = useNavigate()
@@ -23,14 +23,22 @@ function TypingBlock() {
     form.setFieldValue('deletes', form.getFieldValue('deletes') + valueToAdd)
   }
 
+  const setFormStatus = (status: typeof SESSION_STATUS[keyof typeof SESSION_STATUS]) => {
+    form.setFieldValue('formStatus', status)
+  }
+
+  const setTotalSeconds = (seconds: number) => {
+    form.setFieldValue('totalSeconds', seconds)
+  }
+
   const resetForm = () => {
-    form.setFieldValue('formStatus', SESSION_STATUS.NOT_STARTED)
+    setFormStatus(SESSION_STATUS.NOT_STARTED)
     form.reset()
   }
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    form.setFieldValue('formStatus', SESSION_STATUS.FINISHED)
+    setFormStatus(SESSION_STATUS.FINISHED)
 
     if(!form.getFieldValue('userName')) {
       return;
@@ -45,7 +53,11 @@ function TypingBlock() {
         Current Session:
         <span className="text-blue-500 ml-3">{paragraph.name}</span>
       </Title>
-      <FullTimer form={form} />
+      <FullTimer
+        formStatus={formStatus}
+        setFormStatus={setFormStatus}
+        setTotalSeconds={setTotalSeconds}
+      />
       <form.Field name="input" children={(field) => (
         <>
           <HighlightParagraph 

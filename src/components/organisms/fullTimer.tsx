@@ -1,20 +1,30 @@
-import { useSessionForm } from "@/hooks/useSessionForm";
 import { useTyperTimer } from "@/hooks/useTimer"
 import { SESSION_STATUS } from "@/lib/constants";
-import { useStore } from "@tanstack/react-form";
 import { memo, useEffect } from "react";
-import { Timer } from "../atoms/timer";
+import { Timer } from "@/components/atoms/timer";
 
-function FullTimer({ form }: { form: ReturnType<typeof useSessionForm> }) {
-  const { minutes, seconds, pause, restart, totalSeconds, isRunning, start } = useTyperTimer()
+type FullTimerProps = {
+  formStatus: typeof SESSION_STATUS[keyof typeof SESSION_STATUS],
+  setFormStatus: (status: (typeof SESSION_STATUS)[keyof typeof SESSION_STATUS]) => void,
+  setTotalSeconds: (seconds: number) => void,
+}
 
-  const formStatus = useStore(form.store, ({ values }) => values.formStatus)
+function FullTimerBase({ formStatus, setTotalSeconds, setFormStatus }: FullTimerProps) {
+  const {
+    minutes,
+    seconds,
+    totalSeconds,
+    isRunning,
+    pause,
+    restart,
+    start
+  } = useTyperTimer()
 
   useEffect(() => {
       if (minutes === 0 && seconds === 0 && formStatus === SESSION_STATUS.STARTED) {
         pause()
-        form.setFieldValue('formStatus', SESSION_STATUS.FINISHED)
-        form.setFieldValue('totalSeconds', totalSeconds)
+        setFormStatus(SESSION_STATUS.FINISHED)
+        setTotalSeconds(totalSeconds)
       }
     }, [minutes, seconds, formStatus])
 
@@ -28,11 +38,11 @@ function FullTimer({ form }: { form: ReturnType<typeof useSessionForm> }) {
       case SESSION_STATUS.FINISHED:
         if (isRunning) {
           pause()
-          form.setFieldValue('totalSeconds', totalSeconds)
+          setTotalSeconds(totalSeconds)
         }
         break;
       case SESSION_STATUS.NOT_STARTED:
-        if (isRunning) {
+        if (isRunning || minutes > 0 || seconds > 0) {
           restart()
         }
         break;
@@ -46,4 +56,4 @@ function FullTimer({ form }: { form: ReturnType<typeof useSessionForm> }) {
   )
 }
 
-export default memo(FullTimer)
+export const FullTimer = memo(FullTimerBase)
